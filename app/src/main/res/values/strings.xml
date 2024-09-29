@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">News App Task</string>
+    <string name="all_news">All News</string>
+    <string name="search">Search</string>
+    <string name="saved">Saved</string>
+    <string name="search_frag_search">Search...</string>
+    <string name="loading">Loading</string>
+    <string name="signin">"Sgin in "</string>
+    <string name="cancel">Cancel</string>
+    <string name="chech_internet_connection">Please check internet connection</string>
+    <string name="issue_happened">Something went wrong.</string>
+    <string name="password">Password\n</string>
+    <string name="signup">Sign up</string>
+    <string name="don_t_have_an_account">Donot have account</string>
+    <string name="login_to_your_account">Login to your account</string>
+    <string name="email_address">Email</string>
+    <string name="sign_up_to_your_account">Sign up to new account</string>
+    <string name="username">Username</string>
+    <string name="user_founded">This user is already founded</string>
+    <string name="successfully_sign_up">Successfully sign up</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="required_field">Required field</string>
+    <string name="enter_vaild_email">Enter vaild email</string>
+    <string name="password_validation">Password must contain at least 6 digits.</string>
+    <string name="password_should_be_the_same">Password should be the same</string>
+    <string name="user_not_found">User not found</string>
+</resources>

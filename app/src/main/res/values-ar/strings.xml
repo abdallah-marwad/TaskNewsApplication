@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">اخر الاخبار</string>
+    <string name="all_news">جميع الاخبار</string>
+    <string name="search">بحث</string>
+    <string name="saved">المفضله</string>
+    <string name="search_frag_search">بحث...</string>
+    <string name="loading">جار التحميل</string>
+    <string name="signin">تسجيل الدخول</string>
+    <string name="cancel">إلغاء</string>
+    <string name="chech_internet_connection">من فضلك تاكد من اللإتصال بالإنترنت.</string>
+    <string name="issue_happened">لقد حدث خطأ ما.</string>
+    <string name="password">كلمة المرور\n</string>
+    <string name="signup">التسجيل</string>
+    <string name="don_t_have_an_account">لا تملك حساباً</string>
+    <string name="login_to_your_account">تسجيل الدخول إلى حسابك</string>
+    <string name="email_address">البريد الإلكتروني</string>
+    <string name="sign_up_to_your_account">إنشاء حساب جديد</string>
+    <string name="username">اسم المستخدم</string>
+    <string name="user_founded">هذا المستخدم موجود بالفعل</string>
+    <string name="successfully_sign_up">Successfully sign up</string>
+    <string name="confirm_password">تاكدي كلمة المرور</string>
+    <string name="required_field">Required field</string>
+    <string name="enter_vaild_email">Enter vaild email</string>
+    <string name="password_validation">Password must contain at least 6 digits.</string>
+    <string name="password_should_be_the_same">Password should be the same</string>
+    <string name="user_not_found">User not found</string>
+
+
+</resources>
