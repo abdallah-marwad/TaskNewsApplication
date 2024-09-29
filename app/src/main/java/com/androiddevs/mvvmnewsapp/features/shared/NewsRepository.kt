@@ -11,7 +11,9 @@ class NewsRepository @Inject constructor(
 
 
     suspend fun getBreakingNews(pageNumber : Int) =
-        RetrofitInstance.api.getBreakingNews(pageNumber = pageNumber)
+        RetrofitInstance.api.getTopHeadLines(pageNumber = pageNumber)
+    suspend fun getAllNews(pageNumber : Int) =
+        RetrofitInstance.api.getAllNews(pageNumber = pageNumber)
 
     suspend fun getSearchingNews(searchQuery: String , pageNumber : Int) =
         RetrofitInstance.api.searchForNews(searchQuery, pageNumber)

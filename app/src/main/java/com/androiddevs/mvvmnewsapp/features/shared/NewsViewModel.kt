@@ -25,14 +25,17 @@ class NewsViewModel @Inject constructor(
     }
     // Breaking News Handling
     val breakingNews = MutableLiveData<Resource<NewsResponse>>()
+    val topBreakingNews = MutableLiveData<Resource<NewsResponse>>()
     var breakingNewsPage = 1
     var breakingNewsResponse : NewsResponse? = null
+    var topBreakingNewsResponse : NewsResponse? = null
 
 
      fun getBreakingNews() =
         viewModelScope.launch(Dispatchers.IO)
         {
-            safeBreakingNewsCall()
+            launch { safeBreakingNewsCall()}
+            launch {  safeTopHeadNewsCall()}
         }
 
     /**
@@ -62,7 +65,7 @@ class NewsViewModel @Inject constructor(
         breakingNews.postValue(Resource.Loading())
         try {
             if (InternetConnection().hasInternetConnection()) {
-                val response = newsRepository.getBreakingNews(breakingNewsPage)
+                val response = newsRepository.getAllNews(breakingNewsPage)
                 breakingNews.postValue(handleBreakingNewResponse(response))
             } else {
                 breakingNews.postValue(Resource.Error("No Internet Connection"))
@@ -76,6 +79,39 @@ class NewsViewModel @Inject constructor(
         }
 
 
+    }
+    private suspend fun safeTopHeadNewsCall() {
+        topBreakingNews.postValue(Resource.Loading())
+        try {
+            if (InternetConnection().hasInternetConnection()) {
+                val response = newsRepository.getBreakingNews(breakingNewsPage)
+                topBreakingNews.postValue(handleTopBreakingNewResponse(response))
+            } else {
+                topBreakingNews.postValue(Resource.Error("No Internet Connection"))
+            }
+        } catch (t: Throwable) {
+            when(t){
+                is IOException -> topBreakingNews.postValue(Resource.Error("Network Failure"))
+                else -> topBreakingNews.postValue(Resource.Error("Conversion Error"))
+            }
+        }
+    }
+    private fun handleTopBreakingNewResponse(response: Response<NewsResponse>): Resource<NewsResponse> {
+        if (response.isSuccessful) {
+            response.body()?.let {
+                if(topBreakingNewsResponse == null){
+                    topBreakingNewsResponse = it
+                }
+                else{
+                    val oldArticle = topBreakingNewsResponse?.articles
+                    val newArticle = it.articles
+                    oldArticle?.addAll(newArticle)
+
+                }
+                return Resource.Success(topBreakingNewsResponse ?: it)
+            }
+        }
+        return Resource.Error(response.message())
     }
     //Room Operations
     val addStateFlow = MutableStateFlow<Long>(0)

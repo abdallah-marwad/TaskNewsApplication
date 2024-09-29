@@ -3,6 +3,7 @@ package com.androiddevs.mvvmnewsapp.features.splash
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
 class MySplashActivity : BaseActivity<ActivitySplashBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         val fadeIn = ObjectAnimator.ofFloat(binding.screenLogo, "alpha", 0f, 1f)
         fadeIn.duration = 1000
         fadeIn.start()

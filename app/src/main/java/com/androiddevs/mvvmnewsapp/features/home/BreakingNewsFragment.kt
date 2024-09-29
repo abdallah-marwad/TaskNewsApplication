@@ -4,34 +4,36 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AbsListView
-import androidx.fragment.app.Fragment
 
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevs.mvvmnewsapp.R
+import com.androiddevs.mvvmnewsapp.data.models.article.NewsResponse
 import com.androiddevs.mvvmnewsapp.features.shared.NewsAdapter
 import com.androiddevs.mvvmnewsapp.databinding.FragmentBreakingNewsBinding
 import com.androiddevs.mvvmnewsapp.features.shared.NewsActivity
 import com.androiddevs.mvvmnewsapp.features.shared.NewsViewModel
 import com.androiddevs.mvvmnewsapp.utils.Constants.Companion.QUERY_PAGE_SIZE
 import com.androiddevs.mvvmnewsapp.utils.Resource
-import com.google.android.material.snackbar.Snackbar
+import com.tailors.doctoria.application.core.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
+class BreakingNewsFragment : BaseFragment<FragmentBreakingNewsBinding>() {
     private lateinit var viewModel: NewsViewModel
-    private lateinit var binding: FragmentBreakingNewsBinding
     private lateinit var newsAdapter: NewsAdapter
+    private lateinit var newsTopAdapter: TopHeadLineAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentBreakingNewsBinding.bind(view)
         viewModel = (activity as NewsActivity).viewModel
-        setUpRecyclerView()
+        setUpRecyclerViewNews()
+        setUpRecyclerViewTopHeadLines()
         viewModelObserving()
+        viewModelObservingTopNews()
         onItemClick()
+        topHeadLineOnItemClick()
     }
 
     private fun onItemClick() {
@@ -60,28 +62,48 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             when (it) {
                 is Resource.Error -> {
                     hideProgressBar()
-                    it.message?.let { message ->
-                        Snackbar.make(binding.root, "Error : $message", Snackbar.LENGTH_SHORT)
-                            .show()
-                    }
-                }
+                    it.message?.let { message -> showDialogWithMsg(message)} }
                 is Resource.Loading -> showProgressBar()
                 is Resource.Success -> {
-                    hideProgressBar()
-                    it.data?.let { newsResponse ->
-                        newsAdapter.differ.submitList(newsResponse.articles.toList())
-                        Log.d("test", "submitList to RecyclerView")
-
-                        val totalPages = newsResponse.totalResults / QUERY_PAGE_SIZE + 2
-                        isLastPage = viewModel.breakingNewsPage == totalPages
-                        if (isLastPage) {
-                            binding.rvBreakingNews.setPadding(0, 0, 0, 0)
-                        }
-                    }
+                  handleSuccessGetNews(it)
                 }
             }
         }
     }
+    private fun viewModelObservingTopNews() {
+        viewModel.topBreakingNews.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Error -> {
+                    hideProgressBar()
+                    it.message?.let { message -> showDialogWithMsg(message)} }
+                is Resource.Loading -> showProgressBar()
+                is Resource.Success -> {
+                  handleSuccessGetTopNews(it)
+                }
+            }
+        }
+    }
+
+    private fun handleSuccessGetNews(reponse: Resource.Success<NewsResponse>) {
+        hideProgressBar()
+        reponse.data?.let { newsResponse ->
+            binding.headlinesTxt.visibility = View.VISIBLE
+            newsAdapter.differ.submitList(newsResponse.articles.toList())
+            val totalPages = newsResponse.totalResults / QUERY_PAGE_SIZE + 2
+            isLastPage = viewModel.breakingNewsPage == totalPages
+            if (isLastPage) {
+                binding.rvBreakingNews.setPadding(0, 0, 0, 0)
+            }
+        }
+    }
+    private fun handleSuccessGetTopNews(reponse: Resource.Success<NewsResponse>) {
+        hideProgressBar()
+        reponse.data?.let { newsResponse ->
+            newsTopAdapter.differ.submitList(newsResponse.articles.toList())
+            binding.allNewsTxt.visibility = View.VISIBLE
+        }
+    }
+
 
     var isLoading = false
     var isScrolling = false
@@ -118,13 +140,29 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         }
     }
 
-    private fun setUpRecyclerView() {
+    private fun setUpRecyclerViewNews() {
         newsAdapter = NewsAdapter()
+        newsAdapter.mListCount = 20
         binding.rvBreakingNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
-            addOnScrollListener(this@BreakingNewsFragment.scrollListener)
-            Log.d("test", "setUpRecyclerView")
+//            addOnScrollListener(this@BreakingNewsFragment.scrollListener)
+            Log.d("test", "setUpRecyclerViewNews")
+        }
+    }
+    private fun setUpRecyclerViewTopHeadLines() {
+        newsTopAdapter = TopHeadLineAdapter()
+        binding.rvTopBreakingNews.apply {
+            adapter = newsTopAdapter
+        }
+    }
+    private fun topHeadLineOnItemClick() {
+        newsTopAdapter.setOnClickListener {
+            if (findNavController().currentDestination?.id == R.id.breakingNewsFragment) {
+                findNavController().navigate(
+                    BreakingNewsFragmentDirections.actionBreakingNewsFragmentToArticleFragment(it)
+                )
+            }
         }
     }
 }

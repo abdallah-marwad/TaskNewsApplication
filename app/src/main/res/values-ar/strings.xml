@@ -18,13 +18,15 @@
     <string name="sign_up_to_your_account">إنشاء حساب جديد</string>
     <string name="username">اسم المستخدم</string>
     <string name="user_founded">هذا المستخدم موجود بالفعل</string>
-    <string name="successfully_sign_up">Successfully sign up</string>
-    <string name="confirm_password">تاكدي كلمة المرور</string>
-    <string name="required_field">Required field</string>
-    <string name="enter_vaild_email">Enter vaild email</string>
-    <string name="password_validation">Password must contain at least 6 digits.</string>
-    <string name="password_should_be_the_same">Password should be the same</string>
-    <string name="user_not_found">User not found</string>
+    <string name="successfully_sign_up">تم التسجيل بنجاح</string>
+    <string name="confirm_password">تأكيد كلمة المرور</string>
+    <string name="required_field">هذا الحقل مطلوب</string>
+    <string name="enter_vaild_email">أدخل بريد إلكتروني صحيح</string>
+    <string name="password_validation">يجب أن تحتوي كلمة المرور على 6 أرقام على الأقل.</string>
+    <string name="password_should_be_the_same">يجب أن تكون كلمة المرور متطابقة</string>
+    <string name="user_not_found">المستخدم غير موجود</string>
+    <string name="top_headline">أهم العناوين</string>
+
 
 
 </resources>

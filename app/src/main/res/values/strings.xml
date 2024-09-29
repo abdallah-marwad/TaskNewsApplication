@@ -24,4 +24,5 @@
     <string name="password_validation">Password must contain at least 6 digits.</string>
     <string name="password_should_be_the_same">Password should be the same</string>
     <string name="user_not_found">User not found</string>
+    <string name="top_headline">Top HeadLines</string>
 </resources>
