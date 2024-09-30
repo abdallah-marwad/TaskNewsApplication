@@ -29,6 +29,7 @@
     <string name="Yes">نعم</string>
     <string name="are_you_sure_to_logout">هل أنت متأكد من تسجيل الخروج؟</string>
     <string name="log_out">تسجيل الخروج</string>
+    <string name="not_found">غير موجود</string>
 
 
 </resources>

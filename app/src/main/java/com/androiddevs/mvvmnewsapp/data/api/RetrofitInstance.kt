@@ -32,6 +32,7 @@ class RetrofitInstance {
                     var request: Request = chain.request()
                     if (InternetConnection().hasInternetConnection().not()) {
                         val cacheControl: CacheControl = CacheControl.Builder()
+                            .maxStale(7, TimeUnit.DAYS)
                             .build()
                         request = request.newBuilder()
                             .removeHeader(HEADER_PRAGMA)

@@ -23,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.HashSet
 
 @AndroidEntryPoint
-class SavedNewsFragment : BaseFragment<FragmentSavedNewsBinding>(){
+class SavedNewsFragment : BaseFragment<FragmentSavedNewsBinding>() {
     lateinit var viewModel: NewsViewModel
     private lateinit var newsAdapter: NewsAdapter
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,29 +39,31 @@ class SavedNewsFragment : BaseFragment<FragmentSavedNewsBinding>(){
         onItemClick()
         ItemTouchHelper(swipeToDelete()).attachToRecyclerView(binding.rvSavedNews)
     }
-    private fun swipeToDelete() : ItemTouchHelper.SimpleCallback{
+
+    private fun swipeToDelete(): ItemTouchHelper.SimpleCallback {
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
-            ItemTouchHelper.UP or ItemTouchHelper.UP ,
+            ItemTouchHelper.UP or ItemTouchHelper.UP,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ){
+        ) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-               return true
+                return true
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val article = newsAdapter.differ.currentList[position]
                 viewModel.deleteArticle(article)
-                view?.let { Snackbar.make(it, "Successfully Deleted Article" , Snackbar.LENGTH_SHORT).apply {
-                    setAction("Undo"){
-                        viewModel.saveArticle(article)
+                view?.let {
+                    Snackbar.make(it, "Successfully Deleted Article", Snackbar.LENGTH_SHORT).apply {
+                        setAction("Undo") {
+                            viewModel.saveArticle(article)
+                        }
+                        show()
                     }
-                    show()
-                }
 
                 }
 
@@ -71,14 +73,23 @@ class SavedNewsFragment : BaseFragment<FragmentSavedNewsBinding>(){
         return itemTouchHelperCallback
     }
 
-    private fun getSavedData(){
-            val userId = SharedPreferencesHelper.getUser().id
-            viewModel.getFavList(userId).observe(viewLifecycleOwner) {
-                val favList = it?.favArticles ?: return@observe
-                viewModel.getArticlesByIds(favList).observe(viewLifecycleOwner) {
-                newsAdapter.differ.submitList(it)
+    private fun getSavedData() {
+        val userId = SharedPreferencesHelper.getUser().id
+        viewModel.getFavList(userId).observe(viewLifecycleOwner) {
+            val favList = it?.favArticles
+            if(favList.isNullOrEmpty()){
+                binding.noDataArea.visibility = View.VISIBLE
+                return@observe
             }
+            viewModel.getArticlesByIds(favList).observe(viewLifecycleOwner) {
+                if(it.isNullOrEmpty()){
+                    binding.noDataArea.visibility = View.VISIBLE
+                    return@observe
                 }
+                newsAdapter.differ.submitList(it)
+                binding.noDataArea.visibility = View.GONE
+            }
+        }
     }
 
     private fun onItemClick() {

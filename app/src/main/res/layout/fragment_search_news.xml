@@ -29,11 +29,41 @@
         android:paddingBottom="50dp"
         android:clipToPadding="false"
         android:layoutAnimation="@anim/layout_animation"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etSearch"
          />
 
+    <LinearLayout
+        android:id="@+id/noDataArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_170sdp"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/paper_img" />
+
+        <TextView
+            android:id="@+id/noDataTitle"
+            style="@style/textTitleNormalStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:gravity="center"
+            android:text="@string/not_found" />
+
+    </LinearLayout>
     <ProgressBar
         android:id="@+id/paginationProgressBar"
         style="?attr/progressBarStyle"

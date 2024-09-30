@@ -123,7 +123,10 @@ class SearchNewsFragment : BaseFragment<FragmentSearchNewsBinding>(){
                 is Resource.Error -> {
                     hideProgressBar()
                     it.message?.let { message ->
-                        Snackbar.make(binding.root, "Error : $message" , Snackbar.LENGTH_SHORT).show()                    }
+                        showDialogWithMsg(message)
+                        binding.rvSearchNews.visibility = View.GONE
+                        binding.noDataArea.visibility = View.VISIBLE
+                    }
 
                 }
                 is Resource.Loading ->
@@ -132,26 +135,16 @@ class SearchNewsFragment : BaseFragment<FragmentSearchNewsBinding>(){
                     hideProgressBar()
                     it.data?.let { newsResponse ->
                         changeSearchList.observe(viewLifecycleOwner){
-                            if(it){
-                                newsAdapter.useList = true
-                                newsAdapter.list = newsResponse.articles
-                                val totalPages = newsResponse.totalResults / Constants.QUERY_PAGE_SIZE + 2
-                                isLastPage = viewModel.searchingNewsPage == totalPages
-                                if(isLastPage){
-                                    binding.rvSearchNews.setPadding(0,0,0,0)
-                                }
-                            }else{
-                            newsAdapter.differ.submitList(newsResponse.articles.toList())
-                            val totalPages = newsResponse.totalResults / Constants.QUERY_PAGE_SIZE + 2
-                            isLastPage = viewModel.searchingNewsPage == totalPages
-                            if(isLastPage){
-                                binding.rvSearchNews.setPadding(0,0,0,0)
+                            if(newsResponse.articles.isNullOrEmpty()) {
+                                binding.rvSearchNews.visibility = View.GONE
+                                binding.noDataArea.visibility = View.VISIBLE
+                                return@observe
                             }
+                            newsAdapter.differ.submitList(newsResponse.articles.toList())
+                            binding.rvSearchNews.visibility = View.VISIBLE
+                            binding.noDataArea.visibility = View.GONE
                         }
                         }
-
-                        }
-
                 }
             }
         })
@@ -162,7 +155,7 @@ class SearchNewsFragment : BaseFragment<FragmentSearchNewsBinding>(){
         binding.rvSearchNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
-            addOnScrollListener(this@SearchNewsFragment.scrollListener)
+//            addOnScrollListener(this@SearchNewsFragment.scrollListener)
         }
     }
 }
