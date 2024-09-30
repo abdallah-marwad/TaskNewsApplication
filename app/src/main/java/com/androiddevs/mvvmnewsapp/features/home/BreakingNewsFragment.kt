@@ -1,5 +1,6 @@
 package com.androiddevs.mvvmnewsapp.features.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,12 +11,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevs.mvvmnewsapp.R
 import com.androiddevs.mvvmnewsapp.data.models.article.NewsResponse
+import com.androiddevs.mvvmnewsapp.data.sharedPreferences.SharedPreferencesHelper
 import com.androiddevs.mvvmnewsapp.features.shared.NewsAdapter
 import com.androiddevs.mvvmnewsapp.databinding.FragmentBreakingNewsBinding
+import com.androiddevs.mvvmnewsapp.features.auth.signin.SignInActivity
 import com.androiddevs.mvvmnewsapp.features.shared.NewsActivity
 import com.androiddevs.mvvmnewsapp.features.shared.NewsViewModel
+import com.androiddevs.mvvmnewsapp.utils.Constants
 import com.androiddevs.mvvmnewsapp.utils.Constants.Companion.QUERY_PAGE_SIZE
 import com.androiddevs.mvvmnewsapp.utils.Resource
+import com.androiddevs.mvvmnewsapp.utils.dialogs.AppDialog
 import com.tailors.doctoria.application.core.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,6 +33,10 @@ class BreakingNewsFragment : BaseFragment<FragmentBreakingNewsBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as NewsActivity).viewModel
+        binding.appbar.appbarLogout.setOnClickListener {
+            logout()
+        }
+        binding.appbar.appbarTxt.text = getString(R.string.all_news)
         setUpRecyclerViewNews()
         setUpRecyclerViewTopHeadLines()
         viewModelObserving()

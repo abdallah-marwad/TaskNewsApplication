@@ -25,4 +25,7 @@
     <string name="password_should_be_the_same">Password should be the same</string>
     <string name="user_not_found">User not found</string>
     <string name="top_headline">Top HeadLines</string>
+    <string name="Yes">Yes</string>
+    <string name="are_you_sure_to_logout">Are you sure to logout</string>
+    <string name="log_out">Log out</string>
 </resources>

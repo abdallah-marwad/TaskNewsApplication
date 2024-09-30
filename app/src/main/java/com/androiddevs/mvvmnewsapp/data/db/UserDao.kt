@@ -19,4 +19,10 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE email = :email AND password = :password LIMIT 1")
     suspend fun getUserByEmailAndPassword(email: String, password: String): User?
 
+    @Query("SELECT * FROM users WHERE id = :id LIMIT 1")
+    fun getFavList(id: Int): LiveData<User?>
+
+    @Query("UPDATE users SET favArticles = :newFavArticles WHERE id = :userId")
+    fun updateFavArticles(userId: Int, newFavArticles: List<Int>)
+
 }

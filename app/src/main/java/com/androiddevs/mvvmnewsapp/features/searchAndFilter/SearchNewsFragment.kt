@@ -1,5 +1,6 @@
 package com.androiddevs.mvvmnewsapp.features.searchAndFilter
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AbsListView
@@ -12,30 +13,34 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevs.mvvmnewsapp.R
+import com.androiddevs.mvvmnewsapp.data.sharedPreferences.SharedPreferencesHelper
 import com.androiddevs.mvvmnewsapp.features.shared.NewsAdapter
 import com.androiddevs.mvvmnewsapp.databinding.FragmentSearchNewsBinding
+import com.androiddevs.mvvmnewsapp.features.auth.signin.SignInActivity
 import com.androiddevs.mvvmnewsapp.utils.Constants
 import com.androiddevs.mvvmnewsapp.utils.Resource
 import com.google.android.material.snackbar.Snackbar
+import com.tailors.doctoria.application.core.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 @AndroidEntryPoint
-class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
+class SearchNewsFragment : BaseFragment<FragmentSearchNewsBinding>(){
     private val viewModel : SearchNewsViewModel by viewModels<SearchNewsViewModel>()
     private lateinit var newsAdapter: NewsAdapter
-    private lateinit var binding: FragmentSearchNewsBinding
     private  var changeSearchList: MutableLiveData<Boolean> =  MutableLiveData<Boolean>(false)
     val TAG = "Searching News Fragment"
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentSearchNewsBinding.bind(view)
+        binding.appbar.appbarLogout.setOnClickListener {
+            logout()
+        }
+        binding.appbar.appbarTxt.text = getString(R.string.search)
         setUpRecyclerView()
         viewModelObserving()
         searchWithQuery()
         onItemClick()
 
     }
-
 
     private fun onItemClick() {
         newsAdapter.setOnClickListener {

@@ -32,6 +32,8 @@ class SignInViewModel @Inject constructor(
             if (user != null) {
                 _signInFlow.send(Resource.Success(true))
                 SharedPreferencesHelper.addBoolean(Constants.SIGNED_IN , true)
+                SharedPreferencesHelper.saveUserData(user)
+
                 return@launch
             }
             _signInFlow.send(

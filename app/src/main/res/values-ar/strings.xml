@@ -26,7 +26,9 @@
     <string name="password_should_be_the_same">يجب أن تكون كلمة المرور متطابقة</string>
     <string name="user_not_found">المستخدم غير موجود</string>
     <string name="top_headline">أهم العناوين</string>
-
+    <string name="Yes">نعم</string>
+    <string name="are_you_sure_to_logout">هل أنت متأكد من تسجيل الخروج؟</string>
+    <string name="log_out">تسجيل الخروج</string>
 
 
 </resources>

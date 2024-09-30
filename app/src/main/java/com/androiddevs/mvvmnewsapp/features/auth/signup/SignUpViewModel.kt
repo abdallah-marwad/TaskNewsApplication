@@ -30,6 +30,7 @@ class SignUpViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val userID = userDao.insertNewUser(user)
             if (userID >= 0) {
+                user.id = userID.toInt()
                 _userSavedFlow.send(Resource.Success(true))
                 SharedPreferencesHelper.addBoolean(Constants.SIGNED_IN , true)
                 SharedPreferencesHelper.saveUserData(user)

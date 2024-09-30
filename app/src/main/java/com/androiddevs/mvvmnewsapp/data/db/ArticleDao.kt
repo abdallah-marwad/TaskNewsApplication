@@ -13,7 +13,7 @@ interface ArticleDao {
 
 
     @Insert(onConflict = REPLACE)
-    suspend fun upsert(article: Article) : Long
+     fun upsert(article: Article) : Long
 
     @Query("SELECT * FROM articles")
     fun getAllArticles(): LiveData<List<Article>>

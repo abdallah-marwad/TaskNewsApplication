@@ -64,13 +64,8 @@ class NewsViewModel @Inject constructor(
     private suspend fun safeBreakingNewsCall() {
         breakingNews.postValue(Resource.Loading())
         try {
-            if (InternetConnection().hasInternetConnection()) {
                 val response = newsRepository.getAllNews(breakingNewsPage)
                 breakingNews.postValue(handleBreakingNewResponse(response))
-            } else {
-                breakingNews.postValue(Resource.Error("No Internet Connection"))
-
-            }
         } catch (t: Throwable) {
             when(t){
                 is IOException -> breakingNews.postValue(Resource.Error("Network Failure"))
@@ -83,12 +78,9 @@ class NewsViewModel @Inject constructor(
     private suspend fun safeTopHeadNewsCall() {
         topBreakingNews.postValue(Resource.Loading())
         try {
-            if (InternetConnection().hasInternetConnection()) {
                 val response = newsRepository.getBreakingNews(breakingNewsPage)
                 topBreakingNews.postValue(handleTopBreakingNewResponse(response))
-            } else {
-                topBreakingNews.postValue(Resource.Error("No Internet Connection"))
-            }
+//
         } catch (t: Throwable) {
             when(t){
                 is IOException -> topBreakingNews.postValue(Resource.Error("Network Failure"))
@@ -115,18 +107,25 @@ class NewsViewModel @Inject constructor(
     }
     //Room Operations
     val addStateFlow = MutableStateFlow<Long>(0)
-    fun saveArticle(article: Article) =
-        viewModelScope.launch(Dispatchers.IO) {
-
-            addStateFlow.emit(newsRepository.upsert(article))
-
-        }
+    val addedArticle = MutableStateFlow<Long>(0)
+     fun saveArticle(article: Article) {
+         viewModelScope.launch(Dispatchers.IO) {
+             addedArticle.emit(newsRepository.upsert(article))
+         }
+     }
 
     fun deleteArticle(article: Article) = viewModelScope.launch(Dispatchers.IO) {
         newsRepository.delete(article)
     }
 
     fun getSavedNews() = newsRepository.getSavedNews()
+    fun getFavList(userId : Int) = newsRepository.getFavList(userId)
+    fun getArticlesByIds(favIds :  List<Int>) = newsRepository.getArticlesByIds(favIds)
+    fun updateFavArticles(userId : Int , favList : List<Int>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            newsRepository.updateFavArticles(userId, favList)
+        }
+    }
 
 
 

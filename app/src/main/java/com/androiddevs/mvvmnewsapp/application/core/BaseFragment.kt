@@ -1,5 +1,6 @@
 package com.tailors.doctoria.application.core
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.androiddevs.mvvmnewsapp.application.MyApplication
 import com.androiddevs.mvvmnewsapp.R
+import com.androiddevs.mvvmnewsapp.data.sharedPreferences.SharedPreferencesHelper
+import com.androiddevs.mvvmnewsapp.features.auth.signin.SignInActivity
+import com.androiddevs.mvvmnewsapp.utils.Constants
 import com.androiddevs.mvvmnewsapp.utils.dialogs.AppDialog
 import com.androiddevs.mvvmnewsapp.utils.dialogs.ProgressDialog
 import com.google.android.material.snackbar.Snackbar
@@ -107,5 +111,25 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
     protected fun enterAnimationDeprecated() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
             requireActivity().overridePendingTransition(R.anim.from_left, R.anim.to_right)
+    }
+    protected fun logout() {
+        val dialog = AppDialog()
+        dialog.showDialog(
+            requireActivity(),
+            resources.getString(R.string.log_out),
+            resources.getString(R.string.are_you_sure_to_logout),
+            resources.getString(R.string.Yes),
+            resources.getString(R.string.cancel),
+            R.drawable.login,
+            {
+                SharedPreferencesHelper.remove(Constants.SIGNED_IN)
+                SharedPreferencesHelper.remove(Constants.USER_DATA)
+                val intent =  Intent(requireActivity(), SignInActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                dialog.dismiss()
+            },
+            { dialog.dismiss() }
+        )
     }
 }

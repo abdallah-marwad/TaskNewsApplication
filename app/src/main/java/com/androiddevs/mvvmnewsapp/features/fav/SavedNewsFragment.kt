@@ -1,5 +1,6 @@
 package com.androiddevs.mvvmnewsapp.features.fav
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,22 +10,29 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevs.mvvmnewsapp.R
+import com.androiddevs.mvvmnewsapp.data.sharedPreferences.SharedPreferencesHelper
 import com.androiddevs.mvvmnewsapp.features.shared.NewsAdapter
 import com.androiddevs.mvvmnewsapp.databinding.FragmentSavedNewsBinding
+import com.androiddevs.mvvmnewsapp.features.auth.signin.SignInActivity
 import com.androiddevs.mvvmnewsapp.features.shared.NewsActivity
 import com.androiddevs.mvvmnewsapp.features.shared.NewsViewModel
+import com.androiddevs.mvvmnewsapp.utils.Constants
 import com.google.android.material.snackbar.Snackbar
+import com.tailors.doctoria.application.core.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.HashSet
 
 @AndroidEntryPoint
-class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
+class SavedNewsFragment : BaseFragment<FragmentSavedNewsBinding>(){
     lateinit var viewModel: NewsViewModel
-    private lateinit var binding: FragmentSavedNewsBinding
     private lateinit var newsAdapter: NewsAdapter
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentSavedNewsBinding.bind(view)
         viewModel = (activity as NewsActivity).viewModel
+        binding.appbar.appbarLogout.setOnClickListener {
+            logout()
+        }
+        binding.appbar.appbarTxt.text = getString(R.string.saved)
         setUpRecyclerView()
         getSavedData()
         swipeToDelete()
@@ -64,12 +72,15 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
     }
 
     private fun getSavedData(){
-        viewModel.getSavedNews().observe(viewLifecycleOwner) {
-            newsAdapter.differ.submitList(it)
-            Log.d("test", "submitList to RecyclerView")
-
-        }
+            val userId = SharedPreferencesHelper.getUser().id
+            viewModel.getFavList(userId).observe(viewLifecycleOwner) {
+                val favList = it?.favArticles ?: return@observe
+                viewModel.getArticlesByIds(favList).observe(viewLifecycleOwner) {
+                newsAdapter.differ.submitList(it)
+            }
+                }
     }
+
     private fun onItemClick() {
         newsAdapter.setOnClickListener {
             if (findNavController().currentDestination?.id == R.id.savedNewsFragment) {
