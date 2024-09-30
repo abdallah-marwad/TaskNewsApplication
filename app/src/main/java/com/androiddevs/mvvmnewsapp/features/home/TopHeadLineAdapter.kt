@@ -72,7 +72,7 @@ class TopHeadLineAdapter : RecyclerView.Adapter<TopHeadLineAdapter.ArticleViewHo
                 .placeholder(CustomShimmerDrawable().shimmerDrawable)
                 .error(R.drawable.err_banner)
                 .into(ivArticleImage)
-            tvDescription.text = article?.description
+            tvDescription.text = article?.title
         }
         holder.binding.root.setOnClickListener {
             onItemClickListener?.let {
