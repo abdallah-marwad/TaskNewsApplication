@@ -63,6 +63,8 @@ class SearchNewsFragment : BaseFragment<FragmentSearchNewsBinding>(){
                 it?.let {
                     if (it.toString().isNotEmpty()) {
                         viewModel.getSearchingNews(it.toString())
+                        newsAdapter.list?.clear()
+                        newsAdapter.notifyDataSetChanged()
                         changeSearchList.postValue(true)
                     }
                 }
@@ -130,7 +132,6 @@ class SearchNewsFragment : BaseFragment<FragmentSearchNewsBinding>(){
                     hideProgressBar()
                     it.data?.let { newsResponse ->
                         changeSearchList.observe(viewLifecycleOwner){
-
                             if(it){
                                 newsAdapter.useList = true
                                 newsAdapter.list = newsResponse.articles
